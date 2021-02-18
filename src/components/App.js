@@ -1,102 +1,100 @@
-import React, { useState, useEffect } from "react";
+import React, { Component, useState } from "react";
 import "../styles/App.css";
+class App extends React.Component {
 
-function App(){
+  constructor(props) {
+    super(props);
+    this.state={
+      renderBall:false, 
+      time: 0, 
+      x: 0, 
+      y: 0,
+      top:0,
+      left:0,
+      srartTime:0,
+    };
+    this.buttonClickHandler=this.buttonClickHandler.bind(this);
+    this.handeleventlistner=this.handeleventlistner.bind(this);
+    this.tick=this.tick.bind(this);
+  }
 
-  const [time,setTime]=useState(0);
-  const [renderBall,setRenderBall]=useState(false);
-  const [ballPosition,setBallPosition]=useState({left: 0,top: 0});
-  const [holePosition,setHolePosition]=useState({left: 250,top: 250});
-  
-  let timer;
-  const onKeyDown = (event) => { 
-    switch(event.keyCode){
-        case 39:
-        setBallPosition({
-            left:ballPosition.left+5,
-            top:ballPosition.top
-        })
-        break;
-        case 40:
-        setBallPosition({
-            left:ballPosition.left,
-            top:ballPosition.top+5
-        })
-        break;
-        case 37:
-        setBallPosition({
-            left:ballPosition.left-5,
-            top:ballPosition.top
-        })
-        break;
-        case 38:
-        setBallPosition({
-            left:ballPosition.left,
-            top:ballPosition.top-5
-        })
-        break;
-        default:
-        break;
+  buttonClickHandler(){
+    document.addEventListener("keydown",this.handeleventlistner);
+    clearInterval(this.timerID);
+    this.setState({renderBall:true, time: 0, x: 0, y: 0 ,top:0,left:0,startTime:Date.now()})
+    this.timerID = setInterval(
+      () => this.tick(),
+      1000
+    );
+  }
+
+  tick() {
+    if(!(this.state.x ==250 &&this.state.y==250)){
+      let timePassed= Date.now() - this.state.startTime ;
+      let sec=Math.floor(timePassed/(1000));
+      this.setState({
+      time:sec
+      });
     }
   }
+
+  handeleventlistner(e){
+    let code=e.keyCode;
     
-
- useEffect(()=>{
-  document.addEventListener("keydown",onKeyDown);
-  {(ballPosition.left===holePosition.left&&ballPosition.top===holePosition.top)?
-    (reset()
-    )
-    
-
-    :""}
-  return () => { document.removeEventListener("keydown", onKeyDown);}
- },[ballPosition]);
-
-
-  const reset=()=>{
-    clearTimeout(timer);
-    alert(time);
-    setTimeout(()=>{
-      setTime(0);
-    },0);
-    setRenderBall(false);
-    setBallPosition({left: 0,top: 0});
-    setHolePosition({left: 250,top: 250});
+    if(code==39 && !(this.state.x ==250 &&this.state.y==250)){
+        this.setState({
+            x: this.state.left+5, y: this.state.top ,top:this.state.top,left:this.state.left+5
+        });
+    }
+    if(code==37  && !(this.state.x ==250 &&this.state.y==250)){
+        
+        this.setState({
+          
+         x: this.state.left-5, y: this.state.top ,top:this.state.top,left:this.state.left-5
+      });
+    }
+    if(code==38 && !(this.state.x ==250 &&this.state.y==250)){
+        this.setState({
+          
+          x: this.state.left, y:this.state.top-5 ,top:this.state.top-5,left:this.state.left
+      });
+    }
+    if(code==40 && !(this.state.x ==250 &&this.state.y==250)){
+        this.setState({
+          
+          x:this.state.left, y: this.state.top+5 ,top:this.state.top+5,left:this.state.left
+      });
+    }
+    if(this.state.x==250 && this.state.y==250){
+      alert(this.state.time);
+      clearInterval(this.timerID);
+      this.setState({renderBall:false, time: 0, x: 0, y: 0 ,top:0,left:0,startTime:0})
+      document.removeEventListener("keydown",this.handeleventlistner);
+    }
   }
 
-  const buttonClickHandler=()=> {
-    setRenderBall(true);
-  }
-
-  const renderBallOrButton=()=>{
-    if (renderBall) {
-        timer=setTimeout(()=>{
-          setTime(time+1);
-        },1000);
+    renderBallOrButton(){
+    if (this.state.renderBall) {
         return (  
           <>
-          <div className="ball" style={{
-            left:ballPosition.left+"px",
-            top:ballPosition.top+"px",
-            position:"absolute"
-          }}></div>
-          <div className="hole" style={{
-            left:holePosition.left+"px",
-            top:holePosition.top+"px",
-            position:"absolute"
-          }}></div>
-          <div className="heading-timer">{time}</div>
-        </>);
-    } else{
-        return <button onClick={buttonClickHandler} className="start">Start</button>
-    }
+          <div className="ball" style={{ position:"absolute",top:this.state.top +"px",
+          left:this.state.left +"px",}}></div>
+          <div className="hole" ></div>
+          <div className="heading-timer">{this.state.time}</div>
+        </>
+        );
+    } 
+    else
+        return <button onClick={this.buttonClickHandler} className="start">Start</button>
   }
 
-  return (
-    <div>
-        {renderBallOrButton()}
-    </div>
-  )
+  render(){
+    return (
+      <div>
+          {this.renderBallOrButton()}
+      </div>
+    )
+  }
 }
 
 export default App;
