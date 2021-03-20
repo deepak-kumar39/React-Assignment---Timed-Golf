@@ -3,7 +3,9 @@
   top: 50px;
   left: 720px;
 }
-
+body{
+  background-color: aquamarine;
+}
 @import url("https://fonts.googleapis.com/css2?family=Fredoka+One&family=Roboto:ital,wght@1,100&display=swap");
 
 .ballProvider {
@@ -48,4 +50,16 @@
   position: absolute;
   top: 70%;
   left: 60%;
+}
+button{
+  background-color: black;
+  color: bisque;
+  width: 4rem;
+  height: 2rem;
+  font-size: large;
+  cursor: pointer;
+}
+button:hover{
+  background-color: aliceblue;
+  color: black;
 }

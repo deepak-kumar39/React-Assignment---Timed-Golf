@@ -66,7 +66,7 @@ class App extends React.Component {
       });
     }
     if(this.state.x==250 && this.state.y==250){
-      alert(this.state.time);
+      alert("Time taken by you:"+this.state.time);
       clearInterval(this.timerID);
       this.setState({renderBall:false, time: 0, x: 0, y: 0 ,top:0,left:0,startTime:0})
       document.removeEventListener("keydown",this.handeleventlistner);
@@ -77,15 +77,21 @@ class App extends React.Component {
     if (this.state.renderBall) {
         return (  
           <>
+          <p  style={{color:"red", textAlign:"end",fontSize:"1rem"}}>Press Arrow keys to move ball</p>
           <div className="ball" style={{ position:"absolute",top:this.state.top +"px",
           left:this.state.left +"px",}}></div>
           <div className="hole" ></div>
-          <div className="heading-timer">{this.state.time}</div>
+          <div className="heading-timer" style={{fontSize:"2rem"}}>{"Time:"+this.state.time}</div>
         </>
         );
     } 
     else
-        return <button onClick={this.buttonClickHandler} className="start">Start</button>
+        return (
+          <>
+          <h1 style={{textAlign:"center"}}>Welcome to Timed golf</h1>
+          <h2 style={{textAlign:"center", color:"red"}}>Press start to play</h2>
+        <button onClick={this.buttonClickHandler} className="start">Start</button>
+        </>)
   }
 
   render(){
